@@ -1,0 +1,512 @@
+[
+  {
+    "model": "wayfareapi.post",
+    "pk": 1,
+    "fields": {
+      "traveler": 1,
+      "trip": null,
+      "latitude": 37.865101,
+      "longitude": -119.53833,
+      "location_name": "Yosemite National Park",
+      "category": 1,
+      "title": "Sunrise at Glacier Point",
+      "slug": "sunrise-at-glacier-point-1",
+      "short_description": "Caught the morning light as the valley lit up below us. Magical.",
+      "created_at": "2025-08-01T06:30:00Z",
+      "updated_at": "2025-08-01T06:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 2,
+    "fields": {
+      "traveler": 2,
+      "trip": null,
+      "latitude": 30.267153,
+      "longitude": -97.743057,
+      "location_name": "Austin, TX",
+      "category": 2,
+      "title": "Taco Truck Showdown",
+      "slug": "taco-truck-showdown-2",
+      "short_description": "Hit four taco trucks in one day. Found a winner.",
+      "created_at": "2025-08-02T14:00:00Z",
+      "updated_at": "2025-08-02T14:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 3,
+    "fields": {
+      "traveler": 3,
+      "trip": null,
+      "latitude": 40.712776,
+      "longitude": -74.005974,
+      "location_name": "New York City",
+      "category": 3,
+      "title": "City Park Escape",
+      "slug": "city-park-escape-3",
+      "short_description": "Found a quiet spot in the hustle and bustle of NYC.",
+      "created_at": "2025-07-20T10:15:00Z",
+      "updated_at": "2025-07-20T10:15:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 4,
+    "fields": {
+      "traveler": 4,
+      "trip": null,
+      "latitude": 34.052235,
+      "longitude": -118.243683,
+      "location_name": "Los Angeles",
+      "category": 4,
+      "title": "Street Art Tour",
+      "slug": "street-art-tour-4",
+      "short_description": "Explored the colorful murals of downtown LA.",
+      "created_at": "2025-07-15T16:45:00Z",
+      "updated_at": "2025-07-15T16:45:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 5,
+    "fields": {
+      "traveler": 5,
+      "trip": null,
+      "latitude": 48.858370,
+      "longitude": 2.294481,
+      "location_name": "Paris",
+      "category": 1,
+      "title": "Morning by the Eiffel Tower",
+      "slug": "morning-by-the-eiffel-tower-5",
+      "short_description": "The tower looks different in the morning light.",
+      "created_at": "2025-06-10T08:00:00Z",
+      "updated_at": "2025-06-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 6,
+    "fields": {
+      "traveler": 6,
+      "trip": null,
+      "latitude": 51.507351,
+      "longitude": -0.127758,
+      "location_name": "London",
+      "category": 2,
+      "title": "Afternoon Tea at the Ritz",
+      "slug": "afternoon-tea-at-the-ritz-6",
+      "short_description": "A quintessential London experience.",
+      "created_at": "2025-05-20T15:00:00Z",
+      "updated_at": "2025-05-20T15:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 7,
+    "fields": {
+      "traveler": 1,
+      "trip": null,
+      "latitude": 35.689487,
+      "longitude": 139.691711,
+      "location_name": "Tokyo",
+      "category": 3,
+      "title": "Cherry Blossoms in Ueno Park",
+      "slug": "cherry-blossoms-in-ueno-park-7",
+      "short_description": "Springtime beauty all around.",
+      "created_at": "2025-04-10T12:00:00Z",
+      "updated_at": "2025-04-10T12:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 8,
+    "fields": {
+      "traveler": 2,
+      "trip": null,
+      "latitude": 37.774929,
+      "longitude": -122.419416,
+      "location_name": "San Francisco",
+      "category": 4,
+      "title": "Golden Gate Foggy Morning",
+      "slug": "golden-gate-foggy-morning-8",
+      "short_description": "Iconic fog rolling in over the bridge.",
+      "created_at": "2025-03-15T07:30:00Z",
+      "updated_at": "2025-03-15T07:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 9,
+    "fields": {
+      "traveler": 3,
+      "trip": null,
+      "latitude": 55.755825,
+      "longitude": 37.617298,
+      "location_name": "Moscow",
+      "category": 1,
+      "title": "Red Square at Dusk",
+      "slug": "red-square-at-dusk-9",
+      "short_description": "The heart of the city glowing under twilight.",
+      "created_at": "2025-02-20T18:45:00Z",
+      "updated_at": "2025-02-20T18:45:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 10,
+    "fields": {
+      "traveler": 4,
+      "trip": null,
+      "latitude": 41.902782,
+      "longitude": 12.496366,
+      "location_name": "Rome",
+      "category": 2,
+      "title": "Gelato by the Colosseum",
+      "slug": "gelato-by-the-colosseum-10",
+      "short_description": "The perfect treat after a long day of sightseeing.",
+      "created_at": "2025-01-30T14:15:00Z",
+      "updated_at": "2025-01-30T14:15:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 11,
+    "fields": {
+      "traveler": 5,
+      "trip": null,
+      "latitude": -33.868820,
+      "longitude": 151.209296,
+      "location_name": "Sydney",
+      "category": 3,
+      "title": "Harbor Bridge Walk",
+      "slug": "harbor-bridge-walk-11",
+      "short_description": "Amazing views from the top.",
+      "created_at": "2024-12-15T09:00:00Z",
+      "updated_at": "2024-12-15T09:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 12,
+    "fields": {
+      "traveler": 6,
+      "trip": null,
+      "latitude": 19.432608,
+      "longitude": -99.133209,
+      "location_name": "Mexico City",
+      "category": 4,
+      "title": "Colorful Markets of Coyoacán",
+      "slug": "colorful-markets-of-coyoacan-12",
+      "short_description": "Bustling market filled with art and food.",
+      "created_at": "2024-11-10T11:30:00Z",
+      "updated_at": "2024-11-10T11:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 13,
+    "fields": {
+      "traveler": 1,
+      "trip": null,
+      "latitude": 59.329323,
+      "longitude": 18.068581,
+      "location_name": "Stockholm",
+      "category": 1,
+      "title": "Winter Lights in Gamla Stan",
+      "slug": "winter-lights-in-gamla-stan-13",
+      "short_description": "Cobblestone streets and cozy cafes.",
+      "created_at": "2024-10-05T16:00:00Z",
+      "updated_at": "2024-10-05T16:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 14,
+    "fields": {
+      "traveler": 2,
+      "trip": null,
+      "latitude": 51.165691,
+      "longitude": 10.451526,
+      "location_name": "Berlin",
+      "category": 2,
+      "title": "Bratwurst and Biergarten",
+      "slug": "bratwurst-and-biergarten-14",
+      "short_description": "Tasted the best bratwurst in the city.",
+      "created_at": "2024-09-12T13:00:00Z",
+      "updated_at": "2024-09-12T13:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 15,
+    "fields": {
+      "traveler": 3,
+      "trip": null,
+      "latitude": 27.175015,
+      "longitude": 78.042155,
+      "location_name": "Agra",
+      "category": 3,
+      "title": "Sunset at the Taj Mahal",
+      "slug": "sunset-at-the-taj-mahal-15",
+      "short_description": "The marble monument glows at sunset.",
+      "created_at": "2024-08-20T18:30:00Z",
+      "updated_at": "2024-08-20T18:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 16,
+    "fields": {
+      "traveler": 4,
+      "trip": null,
+      "latitude": 35.676192,
+      "longitude": 139.650311,
+      "location_name": "Tokyo",
+      "category": 4,
+      "title": "Neon Nights in Shinjuku",
+      "slug": "neon-nights-in-shinjuku-16",
+      "short_description": "The city never sleeps here.",
+      "created_at": "2024-07-25T21:45:00Z",
+      "updated_at": "2024-07-25T21:45:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 17,
+    "fields": {
+      "traveler": 5,
+      "trip": null,
+      "latitude": 45.421530,
+      "longitude": -75.697193,
+      "location_name": "Ottawa",
+      "category": 1,
+      "title": "Autumn Leaves at Parliament Hill",
+      "slug": "autumn-leaves-at-parliament-hill-17",
+      "short_description": "A crisp fall day with colorful leaves everywhere.",
+      "created_at": "2024-06-30T09:30:00Z",
+      "updated_at": "2024-06-30T09:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 18,
+    "fields": {
+      "traveler": 6,
+      "trip": null,
+      "latitude": 43.653225,
+      "longitude": -79.383186,
+      "location_name": "Toronto",
+      "category": 2,
+      "title": "Poutine Tasting Tour",
+      "slug": "poutine-tasting-tour-18",
+      "short_description": "Sampling the best poutine spots downtown.",
+      "created_at": "2024-05-10T13:15:00Z",
+      "updated_at": "2024-05-10T13:15:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 19,
+    "fields": {
+      "traveler": 1,
+      "trip": null,
+      "latitude": -37.813629,
+      "longitude": 144.963058,
+      "location_name": "Melbourne",
+      "category": 3,
+      "title": "Laneway Coffee Shops",
+      "slug": "laneway-coffee-shops-19",
+      "short_description": "Hidden gems in the city's laneways.",
+      "created_at": "2024-04-20T10:00:00Z",
+      "updated_at": "2024-04-20T10:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 20,
+    "fields": {
+      "traveler": 2,
+      "trip": null,
+      "latitude": 31.230391,
+      "longitude": 121.473701,
+      "location_name": "Shanghai",
+      "category": 4,
+      "title": "The Bund at Sunset",
+      "slug": "the-bund-at-sunset-20",
+      "short_description": "Golden hour over the river and skyline.",
+      "created_at": "2024-03-05T17:45:00Z",
+      "updated_at": "2024-03-05T17:45:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 21,
+    "fields": {
+      "traveler": 3,
+      "trip": null,
+      "latitude": 60.169856,
+      "longitude": 24.938379,
+      "location_name": "Helsinki",
+      "category": 1,
+      "title": "Sauna and Snow",
+      "slug": "sauna-and-snow-21",
+      "short_description": "Relaxing Finnish traditions.",
+      "created_at": "2024-02-20T08:00:00Z",
+      "updated_at": "2024-02-20T08:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 22,
+    "fields": {
+      "traveler": 4,
+      "trip": null,
+      "latitude": 48.208176,
+      "longitude": 16.373819,
+      "location_name": "Vienna",
+      "category": 2,
+      "title": "Coffeehouse Culture",
+      "slug": "coffeehouse-culture-22",
+      "short_description": "Sipping espresso in historic cafes.",
+      "created_at": "2024-01-15T11:00:00Z",
+      "updated_at": "2024-01-15T11:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 23,
+    "fields": {
+      "traveler": 5,
+      "trip": null,
+      "latitude": 59.913869,
+      "longitude": 10.752245,
+      "location_name": "Oslo",
+      "category": 3,
+      "title": "Fjord Views",
+      "slug": "fjord-views-23",
+      "short_description": "Breathtaking natural beauty.",
+      "created_at": "2023-12-30T14:00:00Z",
+      "updated_at": "2023-12-30T14:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 24,
+    "fields": {
+      "traveler": 6,
+      "trip": null,
+      "latitude": 40.416775,
+      "longitude": -3.703790,
+      "location_name": "Madrid",
+      "category": 4,
+      "title": "Flamenco Nights",
+      "slug": "flamenco-nights-24",
+      "short_description": "Live music and dance under the stars.",
+      "created_at": "2023-11-10T22:30:00Z",
+      "updated_at": "2023-11-10T22:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 25,
+    "fields": {
+      "traveler": 1,
+      "trip": null,
+      "latitude": 36.778259,
+      "longitude": -119.417931,
+      "location_name": "California",
+      "category": 1,
+      "title": "Road Trip Along the Pacific Coast",
+      "slug": "road-trip-along-the-pacific-coast-25",
+      "short_description": "Driving the stunning PCH with ocean views for miles.",
+      "created_at": "2023-10-05T09:00:00Z",
+      "updated_at": "2023-10-05T09:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 26,
+    "fields": {
+      "traveler": 2,
+      "trip": null,
+      "latitude": 52.520008,
+      "longitude": 13.404954,
+      "location_name": "Berlin",
+      "category": 2,
+      "title": "History Walk Through Mitte",
+      "slug": "history-walk-through-mitte-26",
+      "short_description": "Walking through Berlin’s fascinating past.",
+      "created_at": "2023-09-10T13:00:00Z",
+      "updated_at": "2023-09-10T13:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 27,
+    "fields": {
+      "traveler": 3,
+      "trip": null,
+      "latitude": 41.385063,
+      "longitude": 2.173404,
+      "location_name": "Barcelona",
+      "category": 3,
+      "title": "Gaudí’s Masterpieces",
+      "slug": "gaudis-masterpieces-27",
+      "short_description": "Admiring the unique architecture of Antoni Gaudí.",
+      "created_at": "2023-08-15T17:30:00Z",
+      "updated_at": "2023-08-15T17:30:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 28,
+    "fields": {
+      "traveler": 4,
+      "trip": null,
+      "latitude": 25.761681,
+      "longitude": -80.191788,
+      "location_name": "Miami",
+      "category": 4,
+      "title": "Sunset on South Beach",
+      "slug": "sunset-on-south-beach-28",
+      "short_description": "Vibrant colors over the Atlantic.",
+      "created_at": "2023-07-20T20:00:00Z",
+      "updated_at": "2023-07-20T20:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 29,
+    "fields": {
+      "traveler": 5,
+      "trip": null,
+      "latitude": 43.769562,
+      "longitude": 11.255814,
+      "location_name": "Florence",
+      "category": 1,
+      "title": "Renaissance Art in Florence",
+      "slug": "renaissance-art-in-florence-29",
+      "short_description": "Discovering the masterpieces of the Renaissance.",
+      "created_at": "2023-06-10T11:00:00Z",
+      "updated_at": "2023-06-10T11:00:00Z"
+    }
+  },
+  {
+    "model": "wayfareapi.post",
+    "pk": 30,
+    "fields": {
+      "traveler": 6,
+      "trip": null,
+      "latitude": 35.907757,
+      "longitude": 127.766922,
+      "location_name": "South Korea",
+      "category": 2,
+      "title": "Night Markets in Seoul",
+      "slug": "night-markets-in-seoul-30",
+      "short_description": "Tasting street food and enjoying lively nightlife.",
+      "created_at": "2023-05-05T19:00:00Z",
+      "updated_at": "2023-05-05T19:00:00Z"
+    }
+  }
+]

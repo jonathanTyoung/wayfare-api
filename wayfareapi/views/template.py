@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from rockapi.models import Void
+from wayfare.models import Void
 
 
 class TemplateView(ViewSet):

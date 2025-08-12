@@ -64,5 +64,16 @@
       "location": "Chiang Mai, Thailand",
       "website": "https://remotedevjourney.com"
     }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 7,
+    "fields": {
+      "user": 7,
+      "bio": "Stuck in Nashville but will travel at any cost.",
+      "profile_image": "https://example.com/images/traveler6.jpg",
+      "location": "Nashville, Tennessee",
+      "website": "https://remotedevjourney.com"
+    }
   }
 ]

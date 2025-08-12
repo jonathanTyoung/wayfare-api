@@ -5,7 +5,7 @@ from rest_framework.viewsets import ViewSet
 from wayfareapi.models import Category
 
 
-class Categories(ViewSet):
+class CategoryViewSet(ViewSet):
     """Category ViewSet"""
 
     def list(self, request):

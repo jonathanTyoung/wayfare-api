@@ -5,13 +5,15 @@ from wayfareapi.views import (
     register_user,
     login_user,
     current_user_view,
-    Posts,
-    Categories
+    PostViewSet,
+    CategoryViewSet,
+    TagViewSet
     )
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r"posts", Posts, "post")
-router.register(r"categories", Categories , "category")
+router.register(r"posts", PostViewSet, "post")
+router.register(r"categories", CategoryViewSet , "category")
+router.register(r'tags', TagViewSet, 'tag')
 
 urlpatterns = [
     path('', include(router.urls)),

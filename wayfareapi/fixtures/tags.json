@@ -1,0 +1,12 @@
+[
+  { "model": "wayfareapi.tag", "pk": 1, "fields": { "name": "sunset" } },
+  { "model": "wayfareapi.tag", "pk": 2, "fields": { "name": "roadtrip" } },
+  { "model": "wayfareapi.tag", "pk": 3, "fields": { "name": "streetfood" } },
+  { "model": "wayfareapi.tag", "pk": 4, "fields": { "name": "hiking" } },
+  { "model": "wayfareapi.tag", "pk": 5, "fields": { "name": "coffeelover" } },
+  { "model": "wayfareapi.tag", "pk": 6, "fields": { "name": "offthebeatenpath" } },
+  { "model": "wayfareapi.tag", "pk": 7, "fields": { "name": "nightlife" } },
+  { "model": "wayfareapi.tag", "pk": 8, "fields": { "name": "photography" } },
+  { "model": "wayfareapi.tag", "pk": 9, "fields": { "name": "fyp" } },
+  { "model": "wayfareapi.tag", "pk": 10, "fields": { "name": "solotravel" } }
+]

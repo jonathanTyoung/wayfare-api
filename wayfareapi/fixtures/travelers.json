@@ -1,0 +1,79 @@
+[
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "bio": "Loves discovering hidden gems around the world.",
+      "profile_image": "https://example.com/images/traveler1.jpg",
+      "location": "San Francisco, CA",
+      "website": "https://traveler1.blog"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "bio": "On a mission to visit every national park in the US.",
+      "profile_image": "https://example.com/images/traveler2.jpg",
+      "location": "Denver, CO",
+      "website": "https://nationalparksfan.net"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "bio": "Street food connoisseur and urban explorer.",
+      "profile_image": "https://example.com/images/traveler3.jpg",
+      "location": "New York, NY",
+      "website": "https://foodiediaries.org"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "bio": "Photographer capturing stories from the road.",
+      "profile_image": "https://example.com/images/traveler4.jpg",
+      "location": "Austin, TX",
+      "website": "https://shutterroutes.com"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "bio": "History buff and ancient ruins enthusiast.",
+      "profile_image": "https://example.com/images/traveler5.jpg",
+      "location": "Rome, Italy",
+      "website": "https://wanderingantiquity.net"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 6,
+    "fields": {
+      "user": 6,
+      "bio": "Nomadic coder building projects on the go.",
+      "profile_image": "https://example.com/images/traveler6.jpg",
+      "location": "Chiang Mai, Thailand",
+      "website": "https://remotedevjourney.com"
+    }
+  },
+  {
+    "model": "wayfareapi.traveler",
+    "pk": 7,
+    "fields": {
+      "user": 7,
+      "bio": "Stuck in Nashville but will travel at any cost.",
+      "profile_image": "https://example.com/images/traveler6.jpg",
+      "location": "Nashville, Tennessee",
+      "website": "https://remotedevjourney.com"
+    }
+  }
+]

@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ def register_user(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_current_user(request):
     """Handle GET requests for single item
 

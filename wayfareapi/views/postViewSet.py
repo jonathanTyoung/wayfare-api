@@ -1,6 +1,7 @@
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.decorators import action
 from django.db.models import Prefetch
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -25,6 +26,8 @@ class PostSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
+            'latitude',
+            'longitude',
             'short_description',
             'created_at',
             'updated_at',
@@ -47,21 +50,36 @@ class PostViewSet(ModelViewSet):
         user = self.request.user
         if user.is_anonymous:
             raise PermissionDenied("You must be logged in")
+        
         traveler = Traveler.objects.get(user=user)
         post = serializer.save(traveler=traveler)
 
+        # Handle tags
         tags = self.request.data.get("tags", [])
         if isinstance(tags, str):
+            # Split comma-separated string
             tags = [t.strip() for t in tags.split(",") if t.strip()]
 
         for name in tags:
-            tag, _ = Tag.objects.get_or_create(name=name)
+            # Normalize tag name to lowercase BEFORE get_or_create
+            normalized_name = name.lower()
+            tag, created = Tag.objects.get_or_create(name=normalized_name)
+            
+            # Link tag to post
             PostTag.objects.get_or_create(post=post, tag=tag)
 
+
     def list(self, request):
-        posts = Post.objects.all().order_by('-created_at')
+        posts = Post.objects.all().order_by('-updated_at')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+ 
+    @action(detail=False, methods=["get"], url_path="traveler/(?P<traveler_id>[^/.]+)")
+    def posts_by_traveler(self, request, traveler_id=None):
+        posts = Post.objects.filter(traveler_id=traveler_id)
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         try:

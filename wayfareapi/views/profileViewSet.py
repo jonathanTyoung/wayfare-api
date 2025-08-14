@@ -7,9 +7,15 @@ from wayfareapi.models import Traveler
 
 # rewrite serializers for specific fields
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', "name"]
+
+    def get_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}".strip()
+
 
 class TravelerSerializer(serializers.ModelSerializer):
     class Meta:

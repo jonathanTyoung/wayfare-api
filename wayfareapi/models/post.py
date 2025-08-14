@@ -1,7 +1,19 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.text import slugify
 from django.db import models
 from .traveler import Traveler
 from .category import Category
-from django.utils.text import slugify
+
+latitude = models.DecimalField(
+    max_digits=9, decimal_places=6,
+    null=True, blank=True,
+    validators=[MinValueValidator(-90), MaxValueValidator(90)]
+)
+longitude = models.DecimalField(
+    max_digits=9, decimal_places=6,
+    null=True, blank=True,
+    validators=[MinValueValidator(-180), MaxValueValidator(180)]
+)
 
 class Post(models.Model):
     traveler = models.ForeignKey(Traveler, on_delete=models.CASCADE, related_name="posts")

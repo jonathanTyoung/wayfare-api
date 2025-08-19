@@ -5,3 +5,4 @@ from .categoryViewSet import CategoryViewSet, CategorySerializer
 from .travelerViewSet import TravelerSerializer, TravelerViewSet
 from .tagViewSet import TagViewSet, TagSerializer
 from .profileViewSet import ProfileViewSet
+from .photoViewSet import PhotoViewSet

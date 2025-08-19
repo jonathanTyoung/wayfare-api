@@ -3,9 +3,9 @@ from .post import Post
 
 class Photo(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="photos")
-    image_url = models.URLField()
-    caption = models.CharField(max_length=255, blank=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    url = models.URLField()
+    public_id = models.CharField(max_length=255, blank=True, null=True)  # Add this
+
 
     def __str__(self):
         return f"Photo for {self.post.title}"

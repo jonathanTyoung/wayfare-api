@@ -3,12 +3,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
 from rest_framework.response import Response
+import cloudinary.uploader
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Prefetch
-from wayfareapi.models import Post, Tag, Traveler, Category, PostTag
+from wayfareapi.models import Post, Tag, Traveler, Category, PostTag, Photo
 from .travelerViewSet import TravelerSerializer
 from .categoryViewSet import CategorySerializer
 from .tagViewSet import TagSerializer
+from .photoViewSet import PhotoSerializer
+
 
 
 # ---------------------------
@@ -21,16 +24,19 @@ class PostSerializer(serializers.ModelSerializer):
         queryset=Category.objects.all(), write_only=True, source='category', required=True
     )
     tags = TagSerializer(many=True, read_only=True)
-
+    photos = PhotoSerializer(many=True, read_only=True)
     class Meta:
         model = Post
         fields = (
-            'id', 'title', 'latitude', 'longitude', 'short_description',
+            'id', 'title', 'latitude', 'longitude', 'short_description', 'long_form_description',
             'created_at', 'updated_at', 'category', 'category_id',
-            'traveler', 'location_name', 'tags'
+            'traveler', 'location_name', 'tags', 'photos'
         )
 
-
+    def get_thumbnail(self, obj):
+        first_photo = obj.photos.first()
+        return first_photo.url if first_photo else None
+    
 # ---------------------------
 # ViewSet
 # ---------------------------
@@ -51,6 +57,33 @@ class PostViewSet(ModelViewSet):
         post = serializer.save(traveler=traveler)
         self._handle_tags(post, self.request.data.get("tags", []))
 
+    @action(detail=True, methods=["post"])
+    def upload_photo(self, request, pk=None):
+        """Upload a photo for a specific post."""
+        post = self.get_object()  # get the Post we’re attaching the photo to
+
+        image_file = request.FILES.get("file")
+        if not image_file:
+            return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        upload_result = cloudinary.uploader.upload(
+            image_file,
+            folder="demo_uploads",
+            tags=["demo"]
+        )
+
+        # Save to DB (assuming you have a Photo model w/ post FK + url field)
+        photo = Photo.objects.create(
+            post=post,
+            url=upload_result["secure_url"],
+            public_id=upload_result["public_id"]  # helpful for later deletion
+        )
+
+        return Response(
+            {"url": photo.url, "id": photo.id},
+            status=status.HTTP_201_CREATED
+        )
+    
     # -----------------------
     # TAG HANDLER
     # -----------------------
@@ -134,7 +167,9 @@ class PostViewSet(ModelViewSet):
             post.tags.clear()
             self._handle_tags(post, tags)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        # Return the serialized post so frontend can access .id
+        return Response(self.get_serializer(post).data, status=status.HTTP_200_OK)
+
 
     def partial_update(self, request, pk=None):
         return self.update(request, pk, partial=True)

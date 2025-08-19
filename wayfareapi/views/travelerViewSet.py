@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from .auth import UserSerializer
+from django.contrib.auth.models import User
 from wayfareapi.models import Traveler
 
 
@@ -92,10 +92,12 @@ class TravelerViewSet(ViewSet):
 
 class TravelerSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+    username = serializers.CharField(source='user.username', read_only=True)
+
 
     class Meta:
         model = Traveler
-        fields = ('id', 'name')  # Only expose ID and full name
+        fields = ('id', 'name', 'username')
 
     def get_name(self, obj):
         return f"{obj.user.first_name} {obj.user.last_name}".strip()

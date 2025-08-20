@@ -121,7 +121,8 @@ class PostViewSet(ModelViewSet):
                 Q(title__icontains=search) |
                 Q(short_description__icontains=search) |
                 Q(category__name__icontains=search) |
-                Q(traveler__traveler__icontains=search) |
+                Q(traveler__name__icontains=search) |
+                Q(traveler__username__icontains=search) |
                 Q(tags__name__icontains=search)  # new: search by tag name
             ).distinct()  # distinct to prevent duplicates from multiple tag matches
 
@@ -129,7 +130,10 @@ class PostViewSet(ModelViewSet):
         if category:
             queryset = queryset.filter(category__name__iexact=category)
         if traveler:
-            queryset = queryset.filter(traveler__traveler__iexact=traveler)
+            queryset = queryset.filter(
+        Q(traveler__name__iexact=traveler) |
+        Q(traveler__username__iexact=traveler)
+    )
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 import cloudinary.uploader
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Prefetch
-from wayfareapi.models import Post, Tag, Traveler, Category, PostTag, Photo, Comment, Like
+from wayfareapi.models import Post, Tag, Traveler, Category, PostTag, Photo, Comment, Like, Bookmark
 from .travelers_viewset import TravelerSerializer
 from .categories_viewset import CategorySerializer
 from .tags_viewset import TagSerializer
@@ -41,6 +41,7 @@ class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.IntegerField(source="likes.count", read_only=True)
     liked_by_user = serializers.SerializerMethodField()
     bookmarks_count = serializers.IntegerField(source="bookmarks.count", read_only=True)
+    bookmarked_by_user = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
 
     # First photo thumbnail
@@ -52,7 +53,9 @@ class PostSerializer(serializers.ModelSerializer):
             'id', 'title', 'latitude', 'longitude', 'short_description', 'long_form_description',
             'created_at', 'updated_at', 'category', 'category_id',
             'traveler', 'location_name', 'tags', 'photos',
-            'likes_count', 'liked_by_user', 'bookmarks_count', 'comments', 'thumbnail'
+            'likes_count', 'liked_by_user', 
+            'bookmarks_count', 'bookmarked_by_user', 
+            'comments', 'thumbnail'
         )
 
     def get_thumbnail(self, obj):
@@ -64,7 +67,12 @@ class PostSerializer(serializers.ModelSerializer):
         if not hasattr(user, 'traveler'):
             return False
         return obj.likes.filter(traveler=user.traveler).exists()
-
+    
+    def get_bookmarked_by_user(self, obj):
+        user = self.context['request'].user
+        if not hasattr(user, 'traveler'):
+            return False
+        return obj.bookmarks.filter(traveler=user.traveler).exists()
 
 # -----------------------
 # ViewSet
@@ -148,6 +156,25 @@ class PostViewSet(ModelViewSet):
             normalized_name = name.lower()
             tag, _ = Tag.objects.get_or_create(name=normalized_name)
             PostTag.objects.get_or_create(post=post, tag=tag)
+
+
+    # -----------------------
+    # BOOKMARK / UNBOOKMARK
+    # -----------------------
+    @action(detail=True, methods=["post", "delete"], permission_classes=[IsAuthenticated])
+    def bookmark(self, request, pk=None):
+        post = self.get_object()
+        traveler = request.user.traveler
+
+        if request.method == "POST":
+            bookmark, created = Bookmark.objects.get_or_create(post=post, traveler=traveler)
+            if created:
+                return Response({"status": "bookmarked"}, status=status.HTTP_201_CREATED)
+            return Response({"status": "already bookmarked"}, status=status.HTTP_200_OK)
+
+        deleted, _ = Bookmark.objects.filter(post=post, traveler=traveler).delete()
+        return Response({"status": "unbookmarked"}, status=status.HTTP_204_NO_CONTENT)
+
 
     # -----------------------
     # LIST WITH FILTERS

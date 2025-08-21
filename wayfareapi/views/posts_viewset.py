@@ -101,6 +101,21 @@ class PostViewSet(ModelViewSet):
         traveler = Traveler.objects.get(user=user)
         post = serializer.save(traveler=traveler)
         self._handle_tags(post, self.request.data.get("tags", []))
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Save the post and handle tags
+        self.perform_create(serializer)
+
+        # Serialize the created post including all fields
+        serialized_post = self.get_serializer(serializer.instance, context={'request': request})
+        headers = self.get_success_headers(serialized_post.data)
+
+        # Return the serialized post with status 201
+        return Response(serialized_post.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     # -----------------------
     # UPLOAD PHOTO

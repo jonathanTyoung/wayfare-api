@@ -1,0 +1,15 @@
+[
+  { "model": "wayfareapi.comment", "pk": 1, "fields": { "traveler": 2, "post": 1, "content": "Amazing story!", "created_at": "2025-08-20T12:20:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 2, "fields": { "traveler": 3, "post": 1, "content": "Loved this spot!", "created_at": "2025-08-20T12:22:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 3, "fields": { "traveler": 1, "post": 2, "content": "Thanks for sharing!", "created_at": "2025-08-20T12:25:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 4, "fields": { "traveler": 4, "post": 3, "content": "Looks amazing!", "created_at": "2025-08-20T12:28:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 5, "fields": { "traveler": 5, "post": 1, "content": "I want to go here too!", "created_at": "2025-08-20T12:30:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 6, "fields": { "traveler": 2, "post": 3, "content": "Great tips!", "created_at": "2025-08-20T12:32:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 7, "fields": { "traveler": 3, "post": 4, "content": "Beautiful photos!", "created_at": "2025-08-20T12:35:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 8, "fields": { "traveler": 1, "post": 4, "content": "Adding this to my list!", "created_at": "2025-08-20T12:37:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 9, "fields": { "traveler": 4, "post": 2, "content": "Nice perspective!", "created_at": "2025-08-20T12:40:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 10, "fields": { "traveler": 5, "post": 5, "content": "Can't wait to visit!", "created_at": "2025-08-20T12:42:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 11, "fields": { "traveler": 2, "post": 5, "content": "Super helpful post!", "created_at": "2025-08-20T12:45:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 12, "fields": { "traveler": 3, "post": 5, "content": "Adding to favorites!", "created_at": "2025-08-20T12:48:00Z" } },
+  { "model": "wayfareapi.comment", "pk": 13, "fields": { "traveler": 1, "post": 3, "content": "Really enjoyed this!", "created_at": "2025-08-20T12:50:00Z" } }
+]

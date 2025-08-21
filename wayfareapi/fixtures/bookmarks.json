@@ -1,0 +1,15 @@
+[
+  { "model": "wayfareapi.bookmark", "pk": 1, "fields": { "traveler": 1, "post": 2, "created_at": "2025-08-20T12:30:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 2, "fields": { "traveler": 2, "post": 3, "created_at": "2025-08-20T12:35:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 3, "fields": { "traveler": 3, "post": 1, "created_at": "2025-08-20T12:40:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 4, "fields": { "traveler": 4, "post": 4, "created_at": "2025-08-20T12:42:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 5, "fields": { "traveler": 5, "post": 5, "created_at": "2025-08-20T12:45:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 6, "fields": { "traveler": 1, "post": 3, "created_at": "2025-08-20T12:48:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 7, "fields": { "traveler": 2, "post": 4, "created_at": "2025-08-20T12:50:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 8, "fields": { "traveler": 3, "post": 5, "created_at": "2025-08-20T12:52:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 9, "fields": { "traveler": 4, "post": 1, "created_at": "2025-08-20T12:55:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 10, "fields": { "traveler": 5, "post": 2, "created_at": "2025-08-20T12:57:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 11, "fields": { "traveler": 1, "post": 4, "created_at": "2025-08-20T13:00:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 12, "fields": { "traveler": 2, "post": 5, "created_at": "2025-08-20T13:02:00Z" } },
+  { "model": "wayfareapi.bookmark", "pk": 13, "fields": { "traveler": 3, "post": 2, "created_at": "2025-08-20T13:05:00Z" } }
+]

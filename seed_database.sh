@@ -21,6 +21,9 @@ python3 manage.py loaddata tags
 python3 manage.py loaddata posts
 python3 manage.py loaddata posttags
 python3 manage.py loaddata photos
+python3 manage.py loaddata likes
+python3 manage.py loaddata comments
+python3 manage.py loaddata bookmarks
 
 # # --- Seed photos ---
 # echo "Seeding placeholder photos into Cloudinary..."

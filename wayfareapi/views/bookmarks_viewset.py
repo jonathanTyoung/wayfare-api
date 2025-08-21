@@ -2,12 +2,11 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from wayfareapi.models import Void
+from wayfareapi.models import Bookmark
 
 
-class TemplateView(ViewSet):
-    """Void view set"""
-
+class BookmarkView(ViewSet):
+    """Bookmark view set"""
 
     def create(self, request):
         """Handle POST operations
@@ -15,13 +14,13 @@ class TemplateView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        void = Void()
-        void.sample_name = request.data["name"]
-        void.sample_description = request.data["description"]
+        bookmark = Bookmark()
+        bookmark.user = request.data["user"]
+        bookmark.post = request.data["post"]
 
         try:
-            void.save()
-            serializer = VoidSerializer(void)
+            bookmark.save()
+            serializer = BookmarkSerializer(bookmark)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,8 +32,8 @@ class TemplateView(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            void = Void.objects.get(pk=pk)
-            serializer = VoidSerializer(void)
+            bookmark = Bookmark.objects.get(pk=pk)
+            serializer = BookmarkSerializer(bookmark)
             return Response(serializer.data)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -46,11 +45,11 @@ class TemplateView(ViewSet):
             Response -- Empty body with 204 status code
         """
         try:
-            void = Void.objects.get(pk=pk)
-            void.sample_name = request.data["name"]
-            void.sample_description = request.data["description"]
-            void.save()
-        except Void.DoesNotExist:
+            bookmark = Bookmark.objects.get(pk=pk)
+            bookmark.user = request.data["user"]
+            bookmark.post = request.data["post"]
+            bookmark.save()
+        except Bookmark.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -65,11 +64,11 @@ class TemplateView(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            void = Void.objects.get(pk=pk)
-            void.delete()
+            bookmark = Bookmark.objects.get(pk=pk)
+            bookmark.delete()
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-        except Void.DoesNotExist as ex:
+        except Bookmark.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -82,17 +81,16 @@ class TemplateView(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            voids = Void.objects.all()
-            serializer = VoidSerializer(voids, many=True)
+            bookmarks = Bookmark.objects.all()
+            serializer = BookmarkSerializer(bookmarks, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
 
-class VoidSerializer(serializers.ModelSerializer):
+class BookmarkSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
-        model = Void
-        fields = ( 'id', 'sample_name', 'sample_description', )
-
+        model = Bookmark
+        fields = ('id', 'traveler', 'post', 'created_at')

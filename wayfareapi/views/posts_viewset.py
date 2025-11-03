@@ -11,11 +11,10 @@ from .travelers_viewset import TravelerSerializer
 from .categories_viewset import CategorySerializer
 from .tags_viewset import TagSerializer
 from .photos_viewset import PhotoSerializer
-from .likes_viewset import LikeSerializer
 
 
 # ---------------------------
-# Serializer
+# Serializers
 # ---------------------------
 class CommentSerializer(serializers.ModelSerializer):
     traveler = TravelerSerializer(read_only=True)
@@ -62,36 +61,62 @@ class PostSerializer(serializers.ModelSerializer):
         first_photo = obj.photos.first()
         return first_photo.url if first_photo else None
     
+    def _get_traveler(self):
+        return getattr(self.context['request'].user, 'traveler', None)
+
     def get_liked_by_user(self, obj):
-        user = self.context['request'].user
-        if not hasattr(user, 'traveler'):
+        traveler = self._get_traveler()
+        if not traveler:
             return False
-        return obj.likes.filter(traveler=user.traveler).exists()
+        return obj.likes.filter(traveler=traveler).exists()
     
     def get_bookmarked_by_user(self, obj):
-        user = self.context['request'].user
-        if not hasattr(user, 'traveler'):
+        traveler = self._get_traveler()
+        if not traveler:
             return False
-        return obj.bookmarks.filter(traveler=user.traveler).exists()
+        return obj.bookmarks.filter(traveler=traveler).exists()
 
-# -----------------------
+
+# ---------------------------
 # ViewSet
-# -----------------------
+# ---------------------------
 class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Post.objects.all().prefetch_related(
+    queryset = Post.objects.select_related('category', 'traveler').prefetch_related(
         Prefetch('tags', queryset=Tag.objects.all()),
         Prefetch('photos', queryset=Photo.objects.all()),
-        Prefetch('likes', queryset=Like.objects.all())
+        Prefetch('likes', queryset=Like.objects.all()),
+        Prefetch('bookmarks', queryset=Bookmark.objects.all())
     )
+
+    # -----------------------
+    # HELPER: Generic toggle for Like / Bookmark
+    # -----------------------
+    def _toggle_user_post_relation(self, model_class, post, traveler, action):
+        if action == "create":
+            obj, created = model_class.objects.get_or_create(post=post, traveler=traveler)
+            if created:
+                return {"status": model_class.__name__.lower() + "d"}, status.HTTP_201_CREATED
+            return {"status": "already " + model_class.__name__.lower() + "d"}, status.HTTP_200_OK
+
+        # delete action
+        deleted, _ = model_class.objects.filter(post=post, traveler=traveler).delete()
+        if deleted:
+            return {"status": model_class.__name__.lower() + "d"}, status.HTTP_204_NO_CONTENT
+        return {"status": "not " + model_class.__name__.lower() + "d"}, status.HTTP_400_BAD_REQUEST
+
+    # -----------------------
+    # FILTER: by traveler
+    # -----------------------
     @action(detail=False, url_path='traveler/(?P<traveler_id>[^/.]+)')
     def by_traveler(self, request, traveler_id=None):
-        posts = self.queryset.filter(traveler__id=traveler_id)
+        posts = self.get_queryset().filter(traveler__id=traveler_id)
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
+
     # -----------------------
-    # CREATE
+    # CREATE POST
     # -----------------------
     def perform_create(self, serializer):
         user = self.request.user
@@ -101,21 +126,14 @@ class PostViewSet(ModelViewSet):
         traveler = Traveler.objects.get(user=user)
         post = serializer.save(traveler=traveler)
         self._handle_tags(post, self.request.data.get("tags", []))
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        # Save the post and handle tags
         self.perform_create(serializer)
-
-        # Serialize the created post including all fields
         serialized_post = self.get_serializer(serializer.instance, context={'request': request})
         headers = self.get_success_headers(serialized_post.data)
-
-        # Return the serialized post with status 201
         return Response(serialized_post.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
     # -----------------------
     # UPLOAD PHOTO
@@ -127,18 +145,20 @@ class PostViewSet(ModelViewSet):
         if not image_file:
             return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-        upload_result = cloudinary.uploader.upload(
-            image_file,
-            folder="demo_uploads",
-            tags=["demo"]
-        )
+        try:
+            upload_result = cloudinary.uploader.upload(
+                image_file,
+                folder="demo_uploads",
+                tags=["demo"]
+            )
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         photo = Photo.objects.create(
             post=post,
             url=upload_result["secure_url"],
             public_id=upload_result["public_id"]
         )
-
         return Response({"url": photo.url, "id": photo.id}, status=status.HTTP_201_CREATED)
 
     # -----------------------
@@ -148,30 +168,9 @@ class PostViewSet(ModelViewSet):
     def like(self, request, pk=None):
         post = self.get_object()
         traveler = request.user.traveler
-
-        if request.method == "POST":
-            like, created = Like.objects.get_or_create(post=post, traveler=traveler)
-            if created:
-                return Response({"status": "liked"}, status=status.HTTP_201_CREATED)
-            return Response({"status": "already liked"}, status=status.HTTP_200_OK)
-
-        deleted, _ = Like.objects.filter(post=post, traveler=traveler).delete()
-        if deleted:
-            return Response({"status": "unliked"}, status=status.HTTP_204_NO_CONTENT)
-        return Response({"status": "not liked"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # -----------------------
-    # TAG HANDLER
-    # -----------------------
-    def _handle_tags(self, post: Post, tags_input):
-        if isinstance(tags_input, str):
-            tags_input = [t.strip() for t in tags_input.split(",") if t.strip()]
-
-        for name in tags_input:
-            normalized_name = name.lower()
-            tag, _ = Tag.objects.get_or_create(name=normalized_name)
-            PostTag.objects.get_or_create(post=post, tag=tag)
-
+        action = "create" if request.method == "POST" else "delete"
+        response, code = self._toggle_user_post_relation(Like, post, traveler, action)
+        return Response(response, status=code)
 
     # -----------------------
     # BOOKMARK / UNBOOKMARK
@@ -180,24 +179,27 @@ class PostViewSet(ModelViewSet):
     def bookmark(self, request, pk=None):
         post = self.get_object()
         traveler = request.user.traveler
+        action = "create" if request.method == "POST" else "delete"
+        response, code = self._toggle_user_post_relation(Bookmark, post, traveler, action)
+        return Response(response, status=code)
 
-        if request.method == "POST":
-            bookmark, created = Bookmark.objects.get_or_create(post=post, traveler=traveler)
-            if created:
-                return Response({"status": "bookmarked"}, status=status.HTTP_201_CREATED)
-            return Response({"status": "already bookmarked"}, status=status.HTTP_200_OK)
+    # -----------------------
+    # TAG HANDLER
+    # -----------------------
+    def _handle_tags(self, post: Post, tags_input):
+        if isinstance(tags_input, str):
+            tags_input = [t.strip() for t in tags_input.split(",") if t.strip()]
 
-        deleted, _ = Bookmark.objects.filter(post=post, traveler=traveler).delete()
-        return Response({"status": "unbookmarked"}, status=status.HTTP_204_NO_CONTENT)
-
+        for name in set(tags_input):
+            normalized_name = name.lower()
+            tag, _ = Tag.objects.get_or_create(name=normalized_name)
+            PostTag.objects.get_or_create(post=post, tag=tag)
 
     # -----------------------
     # LIST WITH FILTERS
     # -----------------------
     def list(self, request):
-        queryset = Post.objects.all().prefetch_related(
-            'tags', 'photos', 'likes'
-        ).order_by('-updated_at')
+        queryset = self.get_queryset().order_by('-updated_at')
 
         search = request.query_params.get("search", "").strip()
         category = request.query_params.get("category", "").strip()

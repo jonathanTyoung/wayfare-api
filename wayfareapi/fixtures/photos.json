@@ -888,5 +888,35 @@
     "public_id": null,
     "uploaded_at": "2025-08-19T18:52:31.004Z"
   }
+},
+{
+  "model": "wayfareapi.photo",
+  "pk": 90,
+  "fields": {
+    "post": 31,
+    "url": "https://res.cloudinary.com/dyandqxer/image/upload/v1762291425/demo_uploads/fww87xqk6wskydik8yu7.webp",
+    "public_id": "demo_uploads/fww87xqk6wskydik8yu7",
+    "uploaded_at": "2025-11-04T21:23:45.687Z"
+  }
+},
+{
+  "model": "wayfareapi.photo",
+  "pk": 91,
+  "fields": {
+    "post": 31,
+    "url": "https://res.cloudinary.com/dyandqxer/image/upload/v1762291425/demo_uploads/ofh6hwpbmi7lwpxgvio8.jpg",
+    "public_id": "demo_uploads/ofh6hwpbmi7lwpxgvio8",
+    "uploaded_at": "2025-11-04T21:23:46.266Z"
+  }
+},
+{
+  "model": "wayfareapi.photo",
+  "pk": 92,
+  "fields": {
+    "post": 31,
+    "url": "https://res.cloudinary.com/dyandqxer/image/upload/v1762291426/demo_uploads/ltnmq06rj958w5pvee4y.jpg",
+    "public_id": "demo_uploads/ltnmq06rj958w5pvee4y",
+    "uploaded_at": "2025-11-04T21:23:47.080Z"
+  }
 }
 ]

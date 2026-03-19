@@ -1,31 +1,14 @@
-from django.http import HttpResponseServerError
 from rest_framework import serializers, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from django.contrib.auth.models import User
 from wayfareapi.models import Traveler
 
 
 class TravelerViewSet(ViewSet):
     """Traveler view set"""
 
-
-    def create(self, request):
-        """Handle POST operations
-
-        Returns:
-            Response -- JSON serialized instance
-        """
-        traveler = Traveler()
-        traveler.sample_name = request.data["name"]
-        traveler.sample_description = request.data["description"]
-
-        try:
-            traveler.save()
-            serializer = TravelerSerializer(traveler)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as ex:
-            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -37,44 +20,46 @@ class TravelerViewSet(ViewSet):
             traveler = Traveler.objects.get(pk=pk)
             serializer = TravelerSerializer(traveler)
             return Response(serializer.data)
-        except Exception as ex:
-            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        except Traveler.DoesNotExist:
+            return Response({"reason": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, pk=None):
-        """Handle PUT requests
+        """Handle PUT requests — only the profile owner may update
 
         Returns:
             Response -- Empty body with 204 status code
         """
         try:
             traveler = Traveler.objects.get(pk=pk)
-            traveler.sample_name = request.data["name"]
-            traveler.sample_description = request.data["description"]
-            traveler.save()
         except Traveler.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+        if traveler.user != request.user:
+            return Response(None, status=status.HTTP_403_FORBIDDEN)
 
+        traveler.bio = request.data.get("bio", traveler.bio)
+        traveler.profile_image = request.data.get("profile_image", traveler.profile_image)
+        traveler.location = request.data.get("location", traveler.location)
+        traveler.website = request.data.get("website", traveler.website)
+        traveler.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item
 
         Returns:
-            Response -- 200, 404, or 500 status code
+            Response -- 204, 403, or 404 status code
         """
         try:
             traveler = Traveler.objects.get(pk=pk)
-            traveler.delete()
-            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except Traveler.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
-        except Traveler.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        if traveler.user != request.user:
+            return Response(None, status=status.HTTP_403_FORBIDDEN)
 
-        except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        traveler.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request):
         """Handle GET requests for all items
@@ -82,12 +67,9 @@ class TravelerViewSet(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        try:
-            travelers = Traveler.objects.all()
-            serializer = TravelerSerializer(travelers, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+        travelers = Traveler.objects.all()
+        serializer = TravelerSerializer(travelers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TravelerSerializer(serializers.ModelSerializer):

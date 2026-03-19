@@ -151,8 +151,8 @@ class PostViewSet(ModelViewSet):
                 folder="demo_uploads",
                 tags=["demo"]
             )
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception:
+            return Response({"error": "Image upload failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         photo = Photo.objects.create(
             post=post,

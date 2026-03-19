@@ -9,4 +9,3 @@ from .tag import Tag
 from .trip import Trip
 from .like import Like
 from .bookmark import Bookmark
-from .comment import Comment

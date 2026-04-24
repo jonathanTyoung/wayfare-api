@@ -1,5 +1,5 @@
-from django.http import HttpResponseServerError
 from rest_framework import serializers, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from wayfareapi.models import Category
@@ -7,6 +7,8 @@ from wayfareapi.models import Category
 
 class CategoryViewSet(ViewSet):
     """Category ViewSet"""
+
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
         # Remove the order_by('-created_at') since Category model doesn't have created_at field

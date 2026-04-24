@@ -1,5 +1,5 @@
-from django.http import HttpResponseServerError
 from rest_framework import serializers, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from wayfareapi.models import Tag
@@ -8,11 +8,16 @@ from wayfareapi.models import Tag
 class TagViewSet(ViewSet):
     """Tag view set"""
 
+    permission_classes = [IsAuthenticated]
+
     def create(self, request):
         """Handle POST operations"""
-        tag = Tag()
-        tag.name = request.data.get("name")
+        name = request.data.get("name", "").strip()
+        if not name:
+            return Response({"reason": "name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        tag = Tag()
+        tag.name = name
         try:
             tag.save()
             serializer = TagSerializer(tag)
@@ -27,21 +32,26 @@ class TagViewSet(ViewSet):
             serializer = TagSerializer(tag)
             return Response(serializer.data)
         except Tag.DoesNotExist:
-            return Response({'message': 'Tag not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as ex:
-            return Response({"reason": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"reason": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, pk=None):
         """Handle PUT requests"""
         try:
             tag = Tag.objects.get(pk=pk)
-            tag.name = request.data.get("name")
-            tag.save()
-            return Response(None, status=status.HTTP_204_NO_CONTENT)
         except Tag.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
-        except Exception as ex:
-            return HttpResponseServerError(str(ex))
+
+        name = request.data.get("name", "").strip()
+        if not name:
+            return Response({"reason": "name is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        tag.name = name
+        try:
+            tag.save()
+        except Exception as e:
+            return Response({"reason": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item"""
@@ -49,22 +59,19 @@ class TagViewSet(ViewSet):
             tag = Tag.objects.get(pk=pk)
             tag.delete()
             return Response(None, status=status.HTTP_204_NO_CONTENT)
-        except Tag.DoesNotExist as ex:
-            return Response({'message': 'Tag not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as ex:
-            return Response({'message': str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Tag.DoesNotExist:
+            return Response({"reason": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         """Handle GET requests for all items"""
-        try:
-            tags = Tag.objects.all()
-            serializer = TagSerializer(tags, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as ex:
-            return HttpResponseServerError(str(ex))
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+
     class Meta:
         model = Tag
         fields = ('id', 'name')

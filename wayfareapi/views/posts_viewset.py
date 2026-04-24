@@ -16,12 +16,21 @@ from .photos_viewset import PhotoSerializer
 # ---------------------------
 # Serializers
 # ---------------------------
-class CommentSerializer(serializers.ModelSerializer):
+class ReplySerializer(serializers.ModelSerializer):
     traveler = TravelerSerializer(read_only=True)
 
     class Meta:
         model = Comment
         fields = ["id", "traveler", "content", "created_at"]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    traveler = TravelerSerializer(read_only=True)
+    replies = ReplySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ["id", "traveler", "content", "created_at", "replies"]
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -87,7 +96,15 @@ class PostViewSet(ModelViewSet):
         Prefetch('tags', queryset=Tag.objects.all()),
         Prefetch('photos', queryset=Photo.objects.all()),
         Prefetch('likes', queryset=Like.objects.all()),
-        Prefetch('bookmarks', queryset=Bookmark.objects.all())
+        Prefetch('bookmarks', queryset=Bookmark.objects.all()),
+        Prefetch(
+            'comments',
+            queryset=Comment.objects.filter(parent__isnull=True)
+            .select_related('traveler__user')
+            .prefetch_related(
+                Prefetch('replies', queryset=Comment.objects.select_related('traveler__user'))
+            )
+        )
     )
 
     # -----------------------
@@ -126,6 +143,21 @@ class PostViewSet(ModelViewSet):
         traveler = Traveler.objects.get(user=user)
         post = serializer.save(traveler=traveler)
         self._handle_tags(post, self.request.data.get("tags", []))
+
+    def perform_update(self, serializer):
+        post = self.get_object()
+        if post.traveler.user != self.request.user:
+            raise PermissionDenied("You can only edit your own posts.")
+        tags_input = self.request.data.get("tags")
+        updated_post = serializer.save()
+        if tags_input is not None:
+            updated_post.tags.clear()
+            self._handle_tags(updated_post, tags_input)
+
+    def perform_destroy(self, instance):
+        if instance.traveler.user != self.request.user:
+            raise PermissionDenied("You can only delete your own posts.")
+        instance.delete()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

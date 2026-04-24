@@ -2,7 +2,33 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from wayfareapi.models import Comment
+from wayfareapi.models import Comment, Traveler
+
+
+class TravelerBriefSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Traveler
+        fields = ('id', 'username')
+
+
+class ReplySerializer(serializers.ModelSerializer):
+    traveler = TravelerBriefSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'traveler', 'content', 'created_at')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    traveler = TravelerBriefSerializer(read_only=True)
+    replies = ReplySerializer(many=True, read_only=True)
+    parent_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'traveler', 'post', 'content', 'created_at', 'updated_at', 'replies', 'parent_id')
 
 
 class CommentView(ViewSet):
@@ -11,33 +37,24 @@ class CommentView(ViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-        """Handle POST operations
-
-        Returns:
-            Response -- JSON serialized instance
-        """
         post_id = request.data.get("post")
         content = request.data.get("content", "").strip()
+        parent_id = request.data.get("parent_id")
+
         if not post_id or not content:
             return Response({"reason": "post and content are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            comment = Comment()
-            comment.traveler = request.user.traveler
-            comment.post_id = post_id
-            comment.content = content
-            comment.save()
-            serializer = CommentSerializer(comment)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Comment.DoesNotExist:
-            return Response({"reason": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        comment = Comment()
+        comment.traveler = request.user.traveler
+        comment.post_id = post_id
+        comment.content = content
+        if parent_id:
+            comment.parent_id = parent_id
+        comment.save()
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single item
-
-        Returns:
-            Response -- JSON serialized instance
-        """
         try:
             comment = Comment.objects.get(pk=pk)
             serializer = CommentSerializer(comment)
@@ -46,11 +63,6 @@ class CommentView(ViewSet):
             return Response({"reason": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, pk=None):
-        """Handle PUT requests — only the comment owner may edit content
-
-        Returns:
-            Response -- Empty body with 204 status code
-        """
         try:
             comment = Comment.objects.get(pk=pk)
         except Comment.DoesNotExist:
@@ -68,11 +80,6 @@ class CommentView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single item
-
-        Returns:
-            Response -- 204, 403, or 404 status code
-        """
         try:
             comment = Comment.objects.get(pk=pk)
         except Comment.DoesNotExist:
@@ -85,19 +92,9 @@ class CommentView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request):
-        """Handle GET requests for all items
-
-        Returns:
-            Response -- JSON serialized array
-        """
-        comments = Comment.objects.all()
+        post_id = request.query_params.get("post_id")
+        comments = Comment.objects.filter(parent__isnull=True).prefetch_related('replies__traveler__user')
+        if post_id:
+            comments = comments.filter(post_id=post_id)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-
-    class Meta:
-        model = Comment
-        fields = ('id', 'traveler', 'post', 'content', 'created_at', 'updated_at')

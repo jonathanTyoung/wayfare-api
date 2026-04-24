@@ -9,9 +9,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # SECURITY SETTINGS
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")  # fallback for local dev
-DEBUG = os.getenv("DEBUG", "True") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY environment variable must be set")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    if h.strip()
+]
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -98,10 +104,14 @@ REST_FRAMEWORK = {
 }
 
 # CORS
-CORS_ORIGIN_WHITELIST = os.getenv(
-    "CORS_WHITELIST",
-    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173"
-).split(",")
+CORS_ORIGIN_WHITELIST = [
+    h.strip()
+    for h in os.getenv(
+        "CORS_WHITELIST",
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173"
+    ).split(",")
+    if h.strip()
+]
 
 # AUTH / PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [

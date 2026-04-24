@@ -1,4 +1,5 @@
 from rest_framework import serializers, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -9,6 +10,9 @@ class BookmarkView(ViewSet):
     """Bookmark view set"""
 
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Bookmark.objects.filter(traveler__user=self.request.user)
 
     def create(self, request):
         """Handle POST operations
@@ -64,9 +68,11 @@ class BookmarkView(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        bookmarks = Bookmark.objects.all()
-        serializer = BookmarkSerializer(bookmarks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        queryset = self.get_queryset()
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(queryset, request, view=self)
+        serializer = BookmarkSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class BookmarkSerializer(serializers.ModelSerializer):

@@ -7,16 +7,6 @@ from .like import Like
 from django.db.models import Count, Exists, OuterRef
 
 
-latitude = models.DecimalField(
-    max_digits=9, decimal_places=6,
-    null=True, blank=True,
-    validators=[MinValueValidator(-90), MaxValueValidator(90)]
-)
-longitude = models.DecimalField(
-    max_digits=9, decimal_places=6,
-    null=True, blank=True,
-    validators=[MinValueValidator(-180), MaxValueValidator(180)]
-)
 class PostManager(models.Manager):
     def with_likes_for_user(self, user_id):
         likes_subquery = Like.objects.filter(post=OuterRef('pk'), traveler_id=user_id)
@@ -28,8 +18,14 @@ class PostManager(models.Manager):
 class Post(models.Model):
     traveler = models.ForeignKey(Traveler, on_delete=models.CASCADE, related_name="posts")
     trip = models.ForeignKey('Trip', on_delete=models.SET_NULL, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)],
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+    )
     location_name = models.CharField(max_length=255, blank=True)
     tags = models.ManyToManyField('Tag', through='PostTag', related_name='posts')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)

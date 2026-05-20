@@ -15,6 +15,8 @@ class Traveler(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_traveler_for_user(sender, instance, created, **kwargs):
+def create_traveler_for_user(sender, instance, created, raw=False, **kwargs):
+    if raw:
+        return
     if created:
         Traveler.objects.create(user=instance)

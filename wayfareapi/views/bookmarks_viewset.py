@@ -39,7 +39,7 @@ class BookmarkView(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            bookmark = Bookmark.objects.get(pk=pk)
+            bookmark = self.get_queryset().get(pk=pk)
             serializer = BookmarkSerializer(bookmark)
             return Response(serializer.data)
         except Bookmark.DoesNotExist:

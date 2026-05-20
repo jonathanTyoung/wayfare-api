@@ -39,7 +39,7 @@ class LikeView(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            like = Like.objects.get(pk=pk)
+            like = self.get_queryset().get(pk=pk)
             serializer = LikeSerializer(like)
             return Response(serializer.data)
         except Like.DoesNotExist:

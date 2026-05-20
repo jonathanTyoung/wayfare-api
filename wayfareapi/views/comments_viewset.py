@@ -38,11 +38,7 @@ class CommentView(ViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return (
-            Comment.objects
-            .filter(traveler__user=self.request.user, parent__isnull=True)
-            .prefetch_related('replies__traveler__user')
-        )
+        return Comment.objects.filter(traveler__user=self.request.user)
 
     def create(self, request):
         post_id = request.data.get("post")
@@ -64,7 +60,7 @@ class CommentView(ViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            comment = Comment.objects.get(pk=pk)
+            comment = self.get_queryset().get(pk=pk)
             serializer = CommentSerializer(comment)
             return Response(serializer.data)
         except Comment.DoesNotExist:
@@ -100,7 +96,11 @@ class CommentView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request):
-        queryset = self.get_queryset()
+        queryset = (
+            self.get_queryset()
+            .filter(parent__isnull=True)
+            .prefetch_related('replies__traveler__user')
+        )
         post_id = request.query_params.get("post_id")
         if post_id:
             queryset = queryset.filter(post_id=post_id)
